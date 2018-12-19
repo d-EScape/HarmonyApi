@@ -17,14 +17,23 @@ from websocket import create_connection
 
 class harmonysock:
 
-	def __init__(self, host, port='8088', protocol='http'):
+	def __init__(self, host, port='8088', protocol='http', hubid='', timeout=30):
 		self.hub_ip = host
 		self.hub_port = port
 		self.harmony_api = 'http://'+self.hub_ip+":"+self.hub_port
-		self.hub_id = self.gethubid()
+		self.timeout = timeout
+		if hubid != '':
+			self.hub_id = hubid
+		else:
+			self.hub_id = self.gethubid()
 		print('hubid:', self.hub_id)
 		self.hubsocket = create_connection('ws://' + self.hub_ip + ':' + self.hub_port + '/?domain=svcs.myharmony.com&hubId=' + self.hub_id)
-		self.hubconfig = self.getconfig() 
+		self.cacheconfig=''
+
+	def hubconfig(self, refresh=False):
+		if self.cacheconfig=='' or refresh:
+			self.cacheconfig = self.getconfig()
+		return self.cacheconfig
 
 	def startactivity(self, activity):
 		headers = {'Content-type': 'application/json', 'Accept': 'text/plain', 'Origin': 'http//:localhost.nebula.myharmony.com'}
@@ -49,7 +58,7 @@ class harmonysock:
 	def getconfig(self):
 		payload={}
 		#payload['hubId']=self.hub_id #Doesn't even need the hubid?
-		payload['timeout']=30
+		payload['timeout']=self.timeout
 		payload['hbus']={}
 		payload['hbus']['cmd']='vnd.logitech.harmony/vnd.logitech.harmony.engine?config'
 		payload['hbus']['id']='0'
@@ -62,7 +71,7 @@ class harmonysock:
 	def getstate(self):
 		payload={}
 		#payload['hubId']=self.hub_id #Doesn't even need the hubid?
-		payload['timeout']=30
+		payload['timeout']=self.timeout
 		payload['hbus']={}
 		payload['hbus']['cmd']='vnd.logitech.connect/vnd.logitech.statedigest?get'
 		payload['hbus']['id']='0'
@@ -77,14 +86,14 @@ class harmonysock:
 		return state['activityId']
 		
 	def listactivities(self):
-		base=self.hubconfig['activity']
+		base=self.hubconfig()['activity']
 		list={}
 		for item in base:
 			list[item['label']]=item['id']
 		return list
 	
 	def listdevices(self):
-		base=self.hubconfig['device']
+		base=self.hubconfig()['device']
 		list={}
 		for item in base:
 			list[item['label']]=item['id']
@@ -120,7 +129,7 @@ class harmonysock:
 		stroke['type']='IRCommand'
 		payload={}
 		#payload['hubId']=self.hub_id #Doesn't even need the hubid?
-		payload['timeout']=30
+		payload['timeout']=self.timeout
 		payload['hbus']={}
 		payload['hbus']['cmd']='vnd.logitech.harmony/vnd.logitech.harmony.engine?holdAction'
 		payload['hbus']['id']='222'
