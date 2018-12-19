@@ -47,17 +47,27 @@ class harmonysock:
 		return hub_id
 		
 	def getconfig(self):
-		hub_request = json.loads(r'{"hubId":"","timeout":60,"hbus":{"cmd":"vnd.logitech.harmony\/vnd.logitech.harmony.engine?config","id":"0","params":{"verb":"get"}}}')
-		hub_request['hubId'] = self.hub_id
-		self.hubsocket.send(json.dumps(hub_request))
+		payload={}
+		#payload['hubId']=self.hub_id #Doesn't even need the hubid?
+		payload['timeout']=30
+		payload['hbus']={}
+		payload['hbus']['cmd']='vnd.logitech.harmony/vnd.logitech.harmony.engine?config'
+		payload['hbus']['id']='0'
+		payload['hbus']['params']='{"verb":"get"}'
+		self.hubsocket.send(json.dumps(payload))
 		hubsocket_data = self.hubsocket.recv()
 		hub_data = json.loads(hubsocket_data)
 		return hub_data['data']
 
 	def getstate(self):
-		hub_request = json.loads(r'{"hubId":"","timeout":30,"hbus":{"cmd":"vnd.logitech.connect\/vnd.logitech.statedigest?get","id":"0","params":{"verb":"get","format":"json"}}}')
-		hub_request['hubId'] = self.hub_id
-		self.hubsocket.send(json.dumps(hub_request))
+		payload={}
+		#payload['hubId']=self.hub_id #Doesn't even need the hubid?
+		payload['timeout']=30
+		payload['hbus']={}
+		payload['hbus']['cmd']='vnd.logitech.connect/vnd.logitech.statedigest?get'
+		payload['hbus']['id']='0'
+		payload['hbus']['params']='{"verb":"get","format":"json"}'
+		self.hubsocket.send(json.dumps(payload))
 		hubsocket_data = self.hubsocket.recv()
 		hub_data=json.loads(hubsocket_data)
 		return hub_data['data']
