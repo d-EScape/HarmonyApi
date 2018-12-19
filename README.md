@@ -4,7 +4,8 @@ Python class for the Logitech Harmony remote. Using WebSockets instead of disabl
 Based on the information found on:
 https://github.com/jlynch630/Harmony.NET and https://github.com/chadcb/harmonyhub
 
-Usage examples:
+##Usage examples:
+
 harmony = harmonysock('192.168.19.223') #connects and gets initial info
 
 allactivitiedata = harmony.listactivities()
