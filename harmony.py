@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# Logitech Harmony Class using websocket instead of ols api
+# Logitech Harmony Class using websocket instead of old (removed) api
 # Credit for finding/sharing knowledge about the api goes to:
 #	https://github.com/jlynch630/Harmony.NET
 #	https://github.com/chadcb/harmonyhub
