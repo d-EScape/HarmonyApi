@@ -118,13 +118,18 @@ class harmonysock:
 		stroke['deviceId']=device
 		stroke['command']=key
 		stroke['type']='IRCommand'
-		hub_request = json.loads(r'{"hubId":"","timeout":30,"hbus":{"cmd":"vnd.logitech.harmony/vnd.logitech.harmony.engine?holdAction","id":"222","params":{"action":"","status":"","timestamp":""}}}')
-		hub_request['hubId'] = self.hub_id
-		hub_request['hbus']['params']['action']=json.dumps(stroke)
-		hub_request['hbus']['params']['timestamp']="0"
+		payload={}
+		#payload['hubId']=self.hub_id #Doesn't even need the hubid?
+		payload['timeout']=30
+		payload['hbus']={}
+		payload['hbus']['cmd']='vnd.logitech.harmony/vnd.logitech.harmony.engine?holdAction'
+		payload['hbus']['id']='222'
+		payload['hbus']['params']={}
+		payload['hbus']['params']['action']=json.dumps(stroke)
 		if hold:
-			hub_request['hbus']['params']['status']=r'hold'
+			payload['hbus']['params']['status']='hold'
 		else:
-			hub_request['hbus']['params']['status']=r'press'
-		self.hubsocket.send(json.dumps(hub_request))
+			payload['hbus']['params']['status']='press'
+		payload['hbus']['params']['timestamp']="0"
+		self.hubsocket.send(json.dumps(payload))
 		return True
