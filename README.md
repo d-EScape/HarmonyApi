@@ -8,11 +8,11 @@ https://github.com/jlynch630/Harmony.NET and https://github.com/chadcb/harmonyhu
 
 harmony = harmonysock('192.168.19.223') #connects and gets initial info
 
-allactivitiedata = harmony.listactivities()
+all_activitydata = harmony.listactivities()
 
-alldevicedata = harmony.listdevices()
+all_devicedata = harmony.listdevices()
 
-print('TV =', harmony.getactivitybyname('TV Kijken'))
+print('TV =', harmony.getactivitybyname('TV Kijken')) #get activity id from activity name
 
 current = harmony.getstate() # get all current state info
 
